@@ -1,0 +1,34 @@
+Once the bossmool is installed, follow the below steps
+
+creating softlink for folders: asm, bits,gnu,sys from /usr/include/i386-linux-gnu/ to /usr/include/
+
+32 bit
+
+sudo ln -s /usr/include/i386-linux-gnu/asm/ /usr/include/asm
+sudo ln -s /usr/include/i386-linux-gnu/bits/ /usr/include/bits
+sudo ln -s /usr/include/i386-linux-gnu/sys/ /usr/include/sys
+sudo ln -s /usr/include/i386-linux-gnu/gnu/ /usr/include/gnu
+
+
+Create softlinks for 
+
+sudo ln -s /usr/lib/i386-linux-gnu/crti.o /usr/lib/crti.o
+sudo ln -s /usr/lib/i386-linux-gnu/crt1.o /usr/lib/crt1.o
+sudo ln -s /usr/lib/i386-linux-gnu/crtn.o /usr/lib/crtn.o
+
+
+Check compiler first whether its linux gcc or gccmool, set links for gccmool g++mool
+gcc -v
+which gcc
+ls -al /usr/bin/gcc
+ls -al /usr/bin/g++
+sudo rm -rf /usr/bin/gcc /usr/bin/g++
+sudo ln -s /usr/local/bin/gccmool /usr/bin/gcc
+sudo ln -s /usr/local/bin/g++mool /usr/bin/g++
+ls -al /usr/bin/gcc
+ls -al /usr/bin/g++
+
+
+Compile your source code and follow the steps provided in the documentation to boot the OS with newly compiled kernel.
+
+
