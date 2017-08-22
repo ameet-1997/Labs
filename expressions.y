@@ -4,20 +4,21 @@
 	#include <stdlib.h>
 	#include <limits.h>
 	
-	#define YYSTYPE int
+	// #define YYSTYPE int
 	extern int yylex();
 
 	typedef struct identifier_{
 		char* a;
 		int value;
-		identifier *next;
+		struct identifier_ *next;
 	} identifier;
 
-	identifier* head = NULL, tail = NULL;
-	void add_node(int value, char* name, identifier *head, identifier *tail)
+	identifier* head = NULL;
+	identifier* tail = NULL;
+
+	void add_node(int value, char* name)
 	{	
 		identifier *temp;
-
 		identifier *gen = head;
 
 		while(gen != NULL)
@@ -47,9 +48,11 @@
 			tail = tail->next;
 			tail->next = NULL;
 		}
+
+		return;
 	}
 
-	int get_value(char* a, identifier *head)
+	int get_value(char* a)
 	{
 		identifier *temp = head;
 
@@ -61,11 +64,7 @@
 			}
 			temp = temp->next;
 		}
-
-		return INT_MIN;
 	}
-
-	bool exists()
 
 %}
 
@@ -74,26 +73,35 @@
 	char* str;
 }
 
-%token<integer> PLUS MINUS MUL DIV NUM OPEN CLOSE SEMICOLON EQUALS
+%token<integer> NUM 
 %token<str> ID
+%token<integer> PLUS MINUS MUL DIV OPEN CLOSE SEMICOLON EQUALS
+
+%type <integer> expr term factor
 
 %start goal
 
 %%
 
 goal:	series
-series:	assignment SEMICOLON series | assignment SEMICOLON
-assignment:	ID EQUALS expr {add_node($3, $1, head, tail);}
-expr:	OPEN expr CLOSE | expr PLUS term {$$ = $1+$3;}| expr MINUS term {$$ = $1-$3;} | term
-term:	term MUL factor {$$ = $1*$3;} | term DIV factor {$$ = $1/$3;} | factor
-factor:	ID {return get_value($1, head);} | NUM {return $1;}
+;
+series:	assignment SEMICOLON series | assignment SEMICOLON | expr SEMICOLON {printf("The value of the expression is: %d\n", $1);}
+;
+assignment:	ID EQUALS expr {add_node($3, $1);}
+;
+expr:	OPEN expr CLOSE | expr PLUS term {$$ = $1+$3;}| expr MINUS term {$$ = $1-$3;} | term {$$ = $1;}
+;
+term:	term MUL factor {$$ = $1*$3;} | term DIV factor {$$ = $1/$3;} | factor {$$ = $1;}
+;
+factor:	ID {$$ = get_value($1);} | NUM {$$ = $1;} 
+;
 
 %%
 int yywrap() {return 1;}
 int yyerror(char* s) {fprintf(stderr,"Parse error\n");}
-main()
+int main()
 {
-
 	yyparse();
 	exit(0);
+	return 0;
 }
