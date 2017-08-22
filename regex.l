@@ -11,9 +11,10 @@
 \-			{return MINUS;}
 \*			{return MUL;}
 \/			{return DIV;}
-[[a-z]|[A-Z]][[0-9]|[a-z]|[A-Z]] 	{return ID;}
+[a-zA-Z][a-zA-Z0-9]* 	{return ID;}
 \( 			{return OPEN;}
 \)			{return CLOSE;}
 ;			{return SEMICOLON;}
 =			{return EQUALS;}
+
 %%
