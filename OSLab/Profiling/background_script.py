@@ -20,7 +20,7 @@ for key in parameter_values.keys():
 	parameter_values[key] = []
 
 # Profile the CPU for 5 seconds for basic parameters
-how_many_iterations = range(5)
+how_many_iterations = range(200)
 for i in how_many_iterations:
 	os.system("sudo perf stat -e "+initial_parameter_string+" -a sleep 2 1>garbage.txt 2>profiled.txt")
 
@@ -41,9 +41,17 @@ for i in how_many_iterations:
 			pass
 
 
-# Plot graphs based on the parameter values
+# # Plot graphs based on the parameter values
+# for parameter in parameter_values.keys():
+# 	plt.plot(how_many_iterations, parameter_values[parameter])
+# 	plt.ylabel(parameter)
+# 	plt.xlabel("Iterations")
+# 	plt.show()
+
+# Get the mean values of all parameter usages
+# Write parameter values in file
+
+f = open("background_values.csv","w")
 for parameter in parameter_values.keys():
-	plt.plot(how_many_iterations, parameter_values[parameter])
-	plt.ylabel(parameter)
-	plt.xlabel("Iterations")
-	plt.show()
+	f.write(parameter+","+str(float(sum(parameter_values[parameter]))/len(parameter_values[parameter]))+"\n")
+f.close()
